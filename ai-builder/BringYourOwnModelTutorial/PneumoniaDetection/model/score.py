@@ -34,7 +34,7 @@ def get_model_and_sig(model_dir):
         signature = json.load(f)
     model_file = os.path.join(model_dir, signature.get("filename"))
     if not os.path.isfile(model_file):
-        raise FileNotFoundError(f"Model file does not exist")
+        raise FileNotFoundError("Model file does not exist")
     return model_file, signature
 
 
@@ -126,8 +126,7 @@ def init():
 @output_schema(sample_output_schema)
 def run(request):
     df = pd.DataFrame(request)
-    image = get_base64image_from_request(df)
-    if image:
+    if image := get_base64image_from_request(df):
         prediction = get_prediction(image, session, signature)
         return AMLResponse(json.dumps([prediction]), 200)
     else:
